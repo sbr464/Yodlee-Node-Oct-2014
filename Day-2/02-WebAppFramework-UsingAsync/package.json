@@ -1,0 +1,14 @@
+{
+  "name": "02-WebAppFramework-UsingAsync",
+  "version": "0.1.0",
+  "description": "a sample web application",
+  "main": "webServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Magesh K",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^0.9.0"
+  }
+}

@@ -1,12 +1,23 @@
 var http = require("http"),
     fs = require("fs"),
     url = require("url"),
+    qs = require("querystring"),
     calculator = require("./calculator"),
     path = require("path");
 
 var extractData = function(req,res){
     if (req.method === "GET"){
         req.params = url.parse(req.url,true).query;
+    } else if (req.method === "POST"){
+        console.log("A post request is made");
+        var buffer = "";
+        req.on("data", function(dataChunk){
+            buffer += dataChunk;
+        });
+        req.on("end", function(){
+            req.params = qs.parse(buffer);
+            console.log(req.params);
+        });
     }
 }
 
@@ -17,7 +28,7 @@ var isStaticResource = function(pathName){
     });
 }
 var serveStatic = function(req,res){
-    var filePath = path.join(__dirname, req.url);
+    var filePath = path.join(__dirname, req.pathName);
     fs.exists(filePath, function(exists){
         if (!exists){
             res.statusCode = 404;
@@ -37,8 +48,8 @@ var processCalculator = function(req,res){
 }
 var onConnection = function(req,res){
     
-    req.pathName = req.url === "/" ? "index.html" : url.parse(req.url).pathname;
-    console.log(req.pathName);
+    req.pathName = req.url === "/" ? "/index.html" : url.parse(req.url).pathname;
+    console.log("req.pathName = " + req.pathName);
     if (isStaticResource(req.pathName)){
         serveStatic(req,res);
     } else {
@@ -56,4 +67,4 @@ var server = http.createServer(onConnection);
 server.listen(8080);
 console.log("server listening on port 8080");
 
-///calculator?operation=add&number1=100&number=200
+///calculate?operation=add&number1=100&number=200

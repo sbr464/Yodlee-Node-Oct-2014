@@ -1,0 +1,18 @@
+html
+    head
+        link(rel="stylesheet", href="/stylesheets/style.css")
+    body
+        h1 Task Manager
+        hr
+        h3 Tasks
+        ul
+            each task in tasks
+                li 
+                    if task.isCompleted
+                        span(class="completed") #{task.name}
+                    else
+                        span #{task.name}
+                    a(href="/tasks/toggle/#{task.id}") X
+        a(href="/tasks/new") Create New
+        form(method="post",action="/tasks/removeCompleted")
+            input(type="submit", value="Remove Completed")
